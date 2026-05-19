@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer";
 import { RotatingWord } from "@/components/rotating-word";
 import { HeroVisual } from "@/components/hero-visual";
 import { ProfileForm } from "@/components/profile-form";
+import { LoadingTheatre } from "@/components/loading-theatre";
 import { ResultsView } from "@/components/results-view";
 import type { SchemesResponse } from "@/lib/schema";
 import { Sparkles, ArrowDown, Zap, Lock, Languages, Wallet, Layers, Timer } from "lucide-react";
@@ -29,6 +30,12 @@ export default function Home() {
       resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [results]);
+
+  useEffect(() => {
+    if (loading && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [loading]);
 
   function scrollToForm() {
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -166,30 +173,34 @@ export default function Home() {
             </div>
           </section>
 
-          {/* FORM */}
+          {/* FORM / LOADING */}
           <section ref={formRef} className="relative">
             <div className="aurora aurora-pink opacity-40" aria-hidden />
             <div className="relative mx-auto max-w-3xl px-5 sm:px-8 py-16 sm:py-24">
-              <div className="rounded-3xl glass-strong p-6 sm:p-10">
-                <div className="inline-flex items-center gap-2 rounded-full bg-[color:var(--surface-2)] border border-[color:var(--line)] px-3 py-1.5 text-xs text-[color:var(--text-secondary)] mb-6">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--violet)]" />
-                  Three quick sections · about a minute
-                </div>
-                <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.02] text-balance">
-                  <span className="text-gradient-soft">Tell us about </span>
-                  <span className="text-gradient">you.</span>
-                </h2>
-                <p className="mt-3 text-[color:var(--text-secondary)] text-pretty leading-relaxed max-w-xl mb-10">
-                  The more accurate your answers, the better the match. Nothing
-                  is stored.
-                </p>
+              {loading ? (
+                <LoadingTheatre />
+              ) : (
+                <div className="rounded-3xl glass-strong p-6 sm:p-10">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-[color:var(--surface-2)] border border-[color:var(--line)] px-3 py-1.5 text-xs text-[color:var(--text-secondary)] mb-6">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--violet)]" />
+                    Three quick sections · about a minute
+                  </div>
+                  <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.02] text-balance">
+                    <span className="text-gradient-soft">Tell us about </span>
+                    <span className="text-gradient">you.</span>
+                  </h2>
+                  <p className="mt-3 text-[color:var(--text-secondary)] text-pretty leading-relaxed max-w-xl mb-10">
+                    The more accurate your answers, the better the match.
+                    Nothing is stored.
+                  </p>
 
-                <ProfileForm
-                  onResults={setResults}
-                  onLoadingChange={setLoading}
-                  loading={loading}
-                />
-              </div>
+                  <ProfileForm
+                    onResults={setResults}
+                    onLoadingChange={setLoading}
+                    loading={loading}
+                  />
+                </div>
+              )}
             </div>
           </section>
         </main>
