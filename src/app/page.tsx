@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { RotatingWord } from "@/components/rotating-word";
+import { HeroVisual } from "@/components/hero-visual";
 import { ProfileForm } from "@/components/profile-form";
 import { ResultsView } from "@/components/results-view";
 import type { SchemesResponse } from "@/lib/schema";
@@ -44,51 +45,61 @@ export default function Home() {
             <div className="aurora" aria-hidden />
             <div className="absolute inset-0 grid-overlay" aria-hidden />
 
-            <div className="relative mx-auto max-w-5xl px-5 sm:px-8 pt-16 sm:pt-28 pb-20 sm:pb-28">
-              <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1.5 text-xs text-[color:var(--text-secondary)] mb-7">
-                <Sparkles className="h-3.5 w-3.5 text-[color:var(--violet)]" />
-                AI-matched · Central + State · India
-              </div>
+            <div className="relative mx-auto max-w-6xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-20">
+              <div className="grid gap-10 lg:gap-16 lg:grid-cols-12 items-center">
+                {/* TEXT COLUMN */}
+                <div className="lg:col-span-7">
+                  <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1.5 text-xs text-[color:var(--text-secondary)] mb-6">
+                    <Sparkles className="h-3.5 w-3.5 text-[color:var(--violet)]" />
+                    AI-matched · Central + State · India
+                  </div>
 
-              <h1 className="text-5xl sm:text-7xl lg:text-[5.5rem] font-semibold tracking-[-0.03em] leading-[0.98] text-balance">
-                <span className="text-gradient-soft">Find the </span>
-                <RotatingWord words={ROTATING_BENEFITS} />
-                <br />
-                <span className="text-gradient-soft">you&apos;re owed.</span>
-              </h1>
+                  <h1 className="text-[2.75rem] sm:text-6xl lg:text-[5rem] font-semibold tracking-[-0.03em] leading-[0.96] text-balance">
+                    <span className="text-gradient-soft">Find the </span>
+                    <RotatingWord words={ROTATING_BENEFITS} />
+                    <br />
+                    <span className="text-gradient-soft">you&apos;re owed.</span>
+                  </h1>
 
-              <p className="mt-7 text-lg sm:text-xl text-[color:var(--text-secondary)] text-pretty leading-relaxed max-w-2xl">
-                Tens of thousands of crores in Indian government welfare go
-                unclaimed every year. PMAY, PM-KISAN, Ayushman Bharat, Ladki
-                Bahin and 900+ more. The bottleneck is rarely eligibility — it
-                is discovery.
-              </p>
+                  <p className="mt-6 text-lg text-[color:var(--text-secondary)] text-pretty leading-relaxed max-w-xl">
+                    Tens of thousands of crores in Indian welfare go unclaimed
+                    every year. PMAY, PM-KISAN, Ayushman Bharat, Ladki Bahin
+                    and 900+ more. The bottleneck is rarely eligibility — it
+                    is discovery.
+                  </p>
 
-              <div className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <button
-                  onClick={scrollToForm}
-                  className="group relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base font-medium bg-gradient-to-r from-[color:var(--violet)] via-[color:var(--pink)] to-[color:var(--cyan)] text-white shadow-[0_8px_32px_-8px_rgba(168,85,247,0.7)] hover:shadow-[0_16px_48px_-12px_rgba(236,72,153,0.7)] hover:-translate-y-0.5 transition-all duration-300"
-                >
-                  Find my schemes
-                  <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
-                </button>
-                <div className="flex items-center gap-3 text-xs text-[color:var(--text-muted)]">
-                  <span className="inline-flex items-center gap-1.5">
-                    <Zap className="h-3.5 w-3.5" /> Under 1 min
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Lock className="h-3.5 w-3.5" /> No login
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Languages className="h-3.5 w-3.5" /> Free
-                  </span>
+                  <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <button
+                      onClick={scrollToForm}
+                      className="group relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base font-medium bg-gradient-to-r from-[color:var(--violet)] via-[color:var(--pink)] to-[color:var(--cyan)] text-white shadow-[0_8px_32px_-8px_rgba(168,85,247,0.7)] hover:shadow-[0_16px_48px_-12px_rgba(236,72,153,0.7)] hover:-translate-y-0.5 transition-all duration-300"
+                    >
+                      Find my schemes
+                      <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+                    </button>
+                    <div className="flex items-center gap-3 text-xs text-[color:var(--text-muted)]">
+                      <span className="inline-flex items-center gap-1.5">
+                        <Zap className="h-3.5 w-3.5" /> Under 1 min
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Lock className="h-3.5 w-3.5" /> No login
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Languages className="h-3.5 w-3.5" /> Free
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3D VISUAL COLUMN */}
+                <div className="lg:col-span-5">
+                  <HeroVisual />
                 </div>
               </div>
             </div>
           </section>
 
           {/* FEATURE CARDS */}
-          <section className="relative mx-auto max-w-5xl px-5 sm:px-8 -mt-6 pb-20 sm:pb-24">
+          <section className="relative mx-auto max-w-5xl px-5 sm:px-8 pb-20 sm:pb-24">
             <div className="grid gap-4 sm:grid-cols-3">
               {[
                 {

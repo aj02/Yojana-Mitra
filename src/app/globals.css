@@ -264,4 +264,58 @@
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
   }
+
+  /* 3D hero animations */
+  .float-card {
+    animation: float-3d 9s ease-in-out infinite;
+    will-change: transform;
+  }
+  @keyframes float-3d {
+    0%, 100% {
+      translate: 0 0 0;
+    }
+    50% {
+      translate: 0 -14px 0;
+    }
+  }
+  .float-card > div {
+    animation: float-tilt 11s ease-in-out infinite;
+    transform-style: preserve-3d;
+  }
+  @keyframes float-tilt {
+    0%, 100% { transform: rotateX(0deg) rotateY(0deg); }
+    50%      { transform: rotateX(2deg) rotateY(-2deg); }
+  }
+
+  .orb-pulse {
+    animation: orb-pulse 8s ease-in-out infinite;
+  }
+  @keyframes orb-pulse {
+    0%, 100% { opacity: 0.85; transform: translate(-50%, -50%) translateZ(-200px) scale(1); }
+    50%      { opacity: 1;    transform: translate(-50%, -50%) translateZ(-180px) scale(1.08); }
+  }
+
+  .dot-twinkle {
+    animation: twinkle 3.5s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; }
+    50%      { opacity: 0.8;  }
+  }
+
+  .hero-stage {
+    transform-style: preserve-3d;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .float-card,
+    .float-card > div,
+    .orb-pulse,
+    .dot-twinkle,
+    .word-flip > span,
+    .aurora::before,
+    .aurora::after {
+      animation: none !important;
+    }
+  }
 }
