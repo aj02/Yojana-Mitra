@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
 
 type Props<T extends string> = {
   options: readonly T[];
@@ -9,17 +10,12 @@ type Props<T extends string> = {
   ariaLabel?: string;
 };
 
-const baseClass =
-  "relative font-mono text-[0.78rem] uppercase tracking-[0.12em] px-4 py-2.5 border-2 transition-all duration-150 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none";
+const base =
+  "relative inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm transition-all duration-200 border";
 
-export function ChipGroup<T extends string>({
-  options,
-  value,
-  onChange,
-  ariaLabel,
-}: Props<T>) {
+export function ChipGroup<T extends string>({ options, value, onChange, ariaLabel }: Props<T>) {
   return (
-    <div role="radiogroup" aria-label={ariaLabel} className="flex flex-wrap gap-2.5">
+    <div role="radiogroup" aria-label={ariaLabel} className="flex flex-wrap gap-2">
       {options.map((opt) => {
         const selected = opt === value;
         return (
@@ -30,12 +26,13 @@ export function ChipGroup<T extends string>({
             aria-checked={selected}
             onClick={() => onChange(opt)}
             className={cn(
-              baseClass,
+              base,
               selected
-                ? "border-[color:var(--marigold)] bg-[color:var(--marigold)] text-[color:var(--night)] stamp-shadow-cream"
-                : "border-[color:var(--cream-soft)] bg-transparent text-[color:var(--cream)] hover:border-[color:var(--marigold)] hover:text-[color:var(--marigold)]"
+                ? "bg-white text-[color:var(--background-base)] border-white shadow-[0_4px_24px_-4px_rgba(255,255,255,0.4)]"
+                : "bg-[color:var(--surface)] text-[color:var(--text-secondary)] border-[color:var(--line)] hover:text-[color:var(--text-primary)] hover:bg-[color:var(--surface-2)] hover:border-white/20"
             )}
           >
+            {selected && <Check className="h-3.5 w-3.5" />}
             {opt}
           </button>
         );
@@ -51,18 +48,13 @@ type MultiProps<T extends string> = {
   ariaLabel?: string;
 };
 
-export function ChipMulti<T extends string>({
-  options,
-  values,
-  onChange,
-  ariaLabel,
-}: MultiProps<T>) {
+export function ChipMulti<T extends string>({ options, values, onChange, ariaLabel }: MultiProps<T>) {
   function toggle(opt: T) {
     if (values.includes(opt)) onChange(values.filter((v) => v !== opt));
     else onChange([...values, opt]);
   }
   return (
-    <div role="group" aria-label={ariaLabel} className="flex flex-wrap gap-2.5">
+    <div role="group" aria-label={ariaLabel} className="flex flex-wrap gap-2">
       {options.map((opt) => {
         const selected = values.includes(opt);
         return (
@@ -72,13 +64,13 @@ export function ChipMulti<T extends string>({
             aria-pressed={selected}
             onClick={() => toggle(opt)}
             className={cn(
-              baseClass,
+              base,
               selected
-                ? "border-[color:var(--vermilion)] bg-[color:var(--vermilion)] text-[color:var(--cream)] stamp-shadow-cream"
-                : "border-[color:var(--cream-soft)] bg-transparent text-[color:var(--cream)] hover:border-[color:var(--vermilion)] hover:text-[color:var(--vermilion)]"
+                ? "bg-gradient-to-r from-[color:var(--violet)] to-[color:var(--pink)] text-white border-transparent shadow-[0_4px_24px_-4px_rgba(168,85,247,0.6)]"
+                : "bg-[color:var(--surface)] text-[color:var(--text-secondary)] border-[color:var(--line)] hover:text-[color:var(--text-primary)] hover:bg-[color:var(--surface-2)] hover:border-white/20"
             )}
           >
-            {selected && <span aria-hidden className="mr-1.5">✓</span>}
+            {selected && <Check className="h-3.5 w-3.5" />}
             {opt}
           </button>
         );

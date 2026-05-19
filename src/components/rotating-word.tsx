@@ -10,8 +10,8 @@ export function RotatingWord({ words, className }: Props) {
   return (
     <span className={`word-flip ${className ?? ""}`}>
       <span>
-        {list.map((w) => (
-          <span key={w} className="block">
+        {list.map((w, i) => (
+          <span key={w + i} className="block text-gradient">
             {w}
           </span>
         ))}

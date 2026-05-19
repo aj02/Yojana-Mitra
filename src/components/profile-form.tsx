@@ -14,7 +14,7 @@ import {
   GENDERS,
 } from "@/lib/constants";
 import { toast } from "sonner";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2, ChevronDown } from "lucide-react";
 import type { Profile, SchemesResponse } from "@/lib/schema";
 
 type Props = {
@@ -23,11 +23,10 @@ type Props = {
   loading: boolean;
 };
 
-const inputBase =
-  "h-12 w-full bg-transparent border-b-2 border-[color:var(--cream-soft)] focus:border-[color:var(--marigold)] outline-none px-1 text-[color:var(--cream)] placeholder:text-[color:var(--cream-soft)]/50 transition-colors font-display text-xl";
-
-const labelBase =
-  "font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]";
+const labelClass =
+  "text-xs uppercase tracking-[0.12em] text-[color:var(--text-muted)] font-medium";
+const inputClass =
+  "h-12 w-full rounded-xl bg-[color:var(--surface)] border border-[color:var(--line)] px-4 text-[color:var(--text-primary)] placeholder:text-[color:var(--text-muted)] outline-none transition-all focus:border-[color:var(--violet)] focus:bg-[color:var(--surface-2)] focus:shadow-[0_0_0_4px_rgba(168,85,247,0.15)]";
 
 export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
   const [age, setAge] = useState<string>("");
@@ -87,16 +86,16 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-20 sm:space-y-24">
+    <form onSubmit={submit} className="space-y-14 sm:space-y-16">
       <section>
         <SectionHeader
           number="01"
           title="Who you are"
-          hint="A few basics — age, where you live, how you'd describe yourself."
+          hint="A few basics — age, gender, where you live."
         />
-        <div className="grid gap-x-8 gap-y-10 sm:grid-cols-12">
+        <div className="grid gap-5 sm:grid-cols-12">
           <div className="space-y-2 sm:col-span-3">
-            <Label htmlFor="age" className={labelBase}>Age</Label>
+            <Label htmlFor="age" className={labelClass}>Age</Label>
             <input
               id="age"
               type="number"
@@ -106,49 +105,42 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
               value={age}
               placeholder="34"
               onChange={(e) => setAge(e.target.value)}
-              className={inputBase}
+              className={inputClass}
             />
           </div>
-          <div className="space-y-2 sm:col-span-9">
-            <Label htmlFor="gender" className={labelBase}>Gender</Label>
-            <select
-              id="gender"
-              value={gender}
-              onChange={(e) => setGender(e.target.value as (typeof GENDERS)[number])}
-              className={inputBase + " appearance-none cursor-pointer"}
-              style={{
-                backgroundImage:
-                  "linear-gradient(45deg, transparent 50%, var(--marigold) 50%), linear-gradient(135deg, var(--marigold) 50%, transparent 50%)",
-                backgroundPosition:
-                  "calc(100% - 14px) 1.35rem, calc(100% - 8px) 1.35rem",
-                backgroundSize: "6px 6px, 6px 6px",
-                backgroundRepeat: "no-repeat",
-              }}
-            >
-              <option value="" className="bg-[color:var(--night)]">Choose…</option>
-              {GENDERS.map((g) => (
-                <option key={g} value={g} className="bg-[color:var(--night)]">{g}</option>
-              ))}
-            </select>
+          <div className="space-y-2 sm:col-span-5">
+            <Label htmlFor="gender" className={labelClass}>Gender</Label>
+            <div className="relative">
+              <select
+                id="gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value as (typeof GENDERS)[number])}
+                className={inputClass + " appearance-none pr-10 cursor-pointer"}
+              >
+                <option value="">Select</option>
+                {GENDERS.map((g) => (
+                  <option key={g} value={g}>{g}</option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-muted)]" />
+            </div>
           </div>
-          <div className="space-y-2 sm:col-span-12">
-            <Label htmlFor="state" className={labelBase}>State or Union Territory</Label>
+          <div className="space-y-2 sm:col-span-4">
+            <Label htmlFor="state" className={labelClass}>State / UT</Label>
             <input
               id="state"
               list="states-list"
               value={state}
-              placeholder="Start typing… e.g. Maharashtra"
+              placeholder="e.g. Maharashtra"
               onChange={(e) => setState(e.target.value)}
-              className={inputBase}
+              className={inputClass}
               autoComplete="off"
             />
             <datalist id="states-list">
               {STATES.map((s) => <option key={s} value={s} />)}
             </datalist>
             {state && !stateValid && (
-              <p className="font-mono text-xs text-[color:var(--vermilion)]">
-                ⚠ Pick one from the list.
-              </p>
+              <p className="text-xs text-[color:var(--pink)]">Pick one from the list.</p>
             )}
           </div>
         </div>
@@ -158,42 +150,37 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
         <SectionHeader
           number="02"
           title="Your situation"
-          hint="What you do, what you earn, where you fit. Tap one in each row."
+          hint="What you do, what you earn, where you fit."
         />
-        <div className="space-y-10">
-          <div className="space-y-4">
-            <Label className={labelBase}>Occupation</Label>
+        <div className="space-y-8">
+          <div className="space-y-3">
+            <Label className={labelClass}>Occupation</Label>
             <ChipGroup options={OCCUPATIONS} value={occupation} onChange={setOccupation} ariaLabel="Occupation" />
           </div>
-          <div className="space-y-4">
-            <Label className={labelBase}>Annual household income</Label>
+          <div className="space-y-3">
+            <Label className={labelClass}>Annual household income</Label>
             <ChipGroup options={INCOMES} value={income} onChange={setIncome} ariaLabel="Income" />
           </div>
-          <div className="space-y-4">
-            <Label className={labelBase}>Social category</Label>
+          <div className="space-y-3">
+            <Label className={labelClass}>Social category</Label>
             <ChipGroup options={CATEGORIES} value={category} onChange={setCategory} ariaLabel="Social category" />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="education" className={labelBase}>Education</Label>
-            <select
-              id="education"
-              value={education}
-              onChange={(e) => setEducation(e.target.value as (typeof EDUCATION_LEVELS)[number])}
-              className={inputBase + " appearance-none cursor-pointer"}
-              style={{
-                backgroundImage:
-                  "linear-gradient(45deg, transparent 50%, var(--marigold) 50%), linear-gradient(135deg, var(--marigold) 50%, transparent 50%)",
-                backgroundPosition:
-                  "calc(100% - 14px) 1.35rem, calc(100% - 8px) 1.35rem",
-                backgroundSize: "6px 6px, 6px 6px",
-                backgroundRepeat: "no-repeat",
-              }}
-            >
-              <option value="" className="bg-[color:var(--night)]">Choose…</option>
-              {EDUCATION_LEVELS.map((e) => (
-                <option key={e} value={e} className="bg-[color:var(--night)]">{e}</option>
-              ))}
-            </select>
+          <div className="space-y-2 max-w-sm">
+            <Label htmlFor="education" className={labelClass}>Education</Label>
+            <div className="relative">
+              <select
+                id="education"
+                value={education}
+                onChange={(e) => setEducation(e.target.value as (typeof EDUCATION_LEVELS)[number])}
+                className={inputClass + " appearance-none pr-10 cursor-pointer"}
+              >
+                <option value="">Select</option>
+                {EDUCATION_LEVELS.map((e) => (
+                  <option key={e} value={e}>{e}</option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-muted)]" />
+            </div>
           </div>
         </div>
       </section>
@@ -202,7 +189,7 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
         <SectionHeader
           number="03"
           title="Anything else"
-          hint="Tap any that apply. Many schemes target specific situations — being a widow, a senior, owning farmland, living rural."
+          hint="Optional — tap any that apply. Many schemes target specific situations."
         />
         <ChipMulti
           options={SPECIAL_STATUSES}
@@ -210,32 +197,32 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
           onChange={setSpecials}
           ariaLabel="Special statuses"
         />
-        <p className="mt-6 font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]">
-          {specials.length === 0 ? "None selected · optional" : `${specials.length} selected`}
+        <p className="mt-4 text-xs text-[color:var(--text-muted)]">
+          {specials.length === 0 ? "Nothing selected · this is fine" : `${specials.length} selected`}
         </p>
       </section>
 
-      <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+      <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <button
           type="submit"
           disabled={!ready || loading}
-          className="group relative inline-flex items-center justify-center gap-3 px-8 py-5 bg-[color:var(--marigold)] text-[color:var(--night)] font-display text-xl tracking-tight border-2 border-[color:var(--marigold)] stamp-shadow-cream transition-all duration-150 hover:bg-[color:var(--vermilion)] hover:border-[color:var(--vermilion)] hover:text-[color:var(--cream)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[color:var(--marigold)] disabled:hover:text-[color:var(--night)]"
+          className="group relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base font-medium bg-gradient-to-r from-[color:var(--violet)] via-[color:var(--pink)] to-[color:var(--cyan)] text-white shadow-[0_8px_32px_-8px_rgba(168,85,247,0.7)] hover:shadow-[0_12px_40px_-8px_rgba(168,85,247,0.85)] hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-40 disabled:hover:translate-y-0 disabled:cursor-not-allowed w-full sm:w-auto"
         >
           {loading ? (
             <>
-              <Loader2 className="h-6 w-6 animate-spin" />
-              Finding schemes
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Finding your schemes…
             </>
           ) : (
             <>
               Find my schemes
-              <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
             </>
           )}
         </button>
-        {!ready && (
-          <p className="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]">
-            ↑ Complete fields above
+        {!ready && !loading && (
+          <p className="text-xs text-[color:var(--text-muted)]">
+            Complete the required fields above
           </p>
         )}
       </div>

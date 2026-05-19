@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { Ornament, BlockPrintBand, CornerMark } from "@/components/ornament";
 import { RotatingWord } from "@/components/rotating-word";
 import { ProfileForm } from "@/components/profile-form";
 import { ResultsView } from "@/components/results-view";
 import type { SchemesResponse } from "@/lib/schema";
+import { Sparkles, ArrowDown, Zap, Lock, Languages } from "lucide-react";
 
 const ROTATING_BENEFITS = [
   "pensions",
@@ -39,135 +39,121 @@ export default function Home() {
 
       {!results && (
         <main className="flex-1">
-          {/* HERO — typographic poster */}
-          <section className="relative overflow-hidden border-b border-[color:var(--line)]">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -top-20 -right-20 sm:-top-24 sm:-right-16 text-[color:var(--marigold)]/12 opacity-40"
-            >
-              <Ornament size={460} />
-            </div>
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -bottom-32 -left-16 text-[color:var(--vermilion)]/10 opacity-30 rotate-12"
-            >
-              <Ornament size={360} />
-            </div>
+          {/* HERO */}
+          <section className="relative overflow-hidden">
+            <div className="aurora" aria-hidden />
+            <div className="absolute inset-0 grid-overlay" aria-hidden />
 
-            <div className="relative mx-auto max-w-6xl px-6 sm:px-10 pt-14 sm:pt-24 pb-16 sm:pb-28">
-              <CornerMark label="An aid for unclaimed welfare" className="mb-10" />
-
-              <div className="grid gap-10 sm:grid-cols-12 items-end">
-                <div className="sm:col-span-9">
-                  <h1 className="font-display leading-[0.92] text-balance text-[clamp(3rem,9vw,7rem)]">
-                    <span className="block text-[color:var(--cream)]">Find the</span>
-                    <span className="block italic text-[color:var(--marigold)]">
-                      <RotatingWord words={ROTATING_BENEFITS} />
-                    </span>
-                    <span className="block text-[color:var(--cream)]">
-                      you&apos;re owed.
-                    </span>
-                  </h1>
-                </div>
-                <div className="sm:col-span-3 flex sm:justify-end">
-                  <div
-                    aria-hidden
-                    className="inline-flex flex-col items-center justify-center w-28 h-28 sm:w-36 sm:h-36 border-2 border-[color:var(--vermilion)] rotate-stamp font-mono"
-                  >
-                    <span className="text-[0.6rem] uppercase tracking-[0.25em] text-[color:var(--vermilion)]">
-                      Government
-                    </span>
-                    <span className="font-display italic text-3xl sm:text-4xl text-[color:var(--vermilion)] my-1">
-                      Bharat
-                    </span>
-                    <span className="text-[0.6rem] uppercase tracking-[0.25em] text-[color:var(--vermilion)]">
-                      Welfare · 2026
-                    </span>
-                  </div>
-                </div>
+            <div className="relative mx-auto max-w-5xl px-5 sm:px-8 pt-16 sm:pt-28 pb-20 sm:pb-28">
+              <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1.5 text-xs text-[color:var(--text-secondary)] mb-7">
+                <Sparkles className="h-3.5 w-3.5 text-[color:var(--violet)]" />
+                AI-matched · Central + State · India
               </div>
 
-              <div className="mt-12 grid gap-8 sm:grid-cols-12 items-start">
-                <div className="sm:col-span-7 space-y-5">
-                  <p className="text-lg sm:text-xl leading-relaxed text-[color:var(--cream-soft)] text-pretty">
-                    Tens of thousands of crores in Indian welfare benefits go
-                    unclaimed every year. PMAY. PM-KISAN. Ayushman Bharat.
-                    Ladki Bahin. Hundreds of schemes. The bottleneck is rarely
-                    eligibility &mdash; it is{" "}
-                    <span className="text-[color:var(--marigold)]">discovery</span>.
-                  </p>
-                  <p className="text-lg sm:text-xl leading-relaxed text-[color:var(--cream-soft)] text-pretty">
-                    Answer eight questions. We return the central and state
-                    schemes you most likely qualify for, with how to apply.
-                  </p>
-                </div>
-                <div className="sm:col-span-5">
-                  <button
-                    onClick={scrollToForm}
-                    className="group inline-flex items-center justify-center gap-3 px-7 py-5 bg-[color:var(--cream)] text-[color:var(--night)] font-display text-2xl border-2 border-[color:var(--cream)] stamp-shadow w-full sm:w-auto transition-all duration-150 hover:bg-[color:var(--marigold)] hover:border-[color:var(--marigold)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
-                  >
-                    Begin
-                    <span className="transition-transform group-hover:translate-x-1">→</span>
-                  </button>
-                  <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
-                    <div className="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]">
-                      ① ~ 1 min
-                    </div>
-                    <div className="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]">
-                      ② No login
-                    </div>
-                    <div className="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]">
-                      ③ Free
-                    </div>
-                  </div>
+              <h1 className="text-5xl sm:text-7xl lg:text-[5.5rem] font-semibold tracking-[-0.03em] leading-[0.98] text-balance">
+                <span className="text-gradient-soft">Find the </span>
+                <RotatingWord words={ROTATING_BENEFITS} />
+                <br />
+                <span className="text-gradient-soft">you&apos;re owed.</span>
+              </h1>
+
+              <p className="mt-7 text-lg sm:text-xl text-[color:var(--text-secondary)] text-pretty leading-relaxed max-w-2xl">
+                Tens of thousands of crores in Indian government welfare go
+                unclaimed every year. PMAY, PM-KISAN, Ayushman Bharat, Ladki
+                Bahin and 900+ more. The bottleneck is rarely eligibility — it
+                is discovery.
+              </p>
+
+              <div className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <button
+                  onClick={scrollToForm}
+                  className="group relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base font-medium bg-gradient-to-r from-[color:var(--violet)] via-[color:var(--pink)] to-[color:var(--cyan)] text-white shadow-[0_8px_32px_-8px_rgba(168,85,247,0.7)] hover:shadow-[0_16px_48px_-12px_rgba(236,72,153,0.7)] hover:-translate-y-0.5 transition-all duration-300"
+                >
+                  Find my schemes
+                  <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+                </button>
+                <div className="flex items-center gap-3 text-xs text-[color:var(--text-muted)]">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Zap className="h-3.5 w-3.5" /> Under 1 min
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Lock className="h-3.5 w-3.5" /> No login
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Languages className="h-3.5 w-3.5" /> Free
+                  </span>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* MARQUEE divider */}
-          <div className="border-b border-[color:var(--line)] py-3">
-            <BlockPrintBand />
-          </div>
-
-          {/* STAT STRIP */}
-          <section className="border-b border-[color:var(--line)]">
-            <div className="mx-auto max-w-6xl grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[color:var(--line)]">
+          {/* FEATURE CARDS */}
+          <section className="relative mx-auto max-w-5xl px-5 sm:px-8 -mt-6 pb-20 sm:pb-24">
+            <div className="grid gap-4 sm:grid-cols-3">
               {[
-                { stat: "₹70,000 Cr+", label: "Unclaimed welfare in 2024", accent: "var(--marigold)" },
-                { stat: "950+", label: "Active central & state schemes", accent: "var(--vermilion)" },
-                { stat: "< 8 sec", label: "From your profile to matches", accent: "var(--cream)" },
+                {
+                  num: "₹70K Cr+",
+                  label: "Unclaimed welfare in 2024",
+                  tint: "rgba(168,85,247,0.4)",
+                },
+                {
+                  num: "950+",
+                  label: "Active central & state schemes",
+                  tint: "rgba(236,72,153,0.4)",
+                },
+                {
+                  num: "<8 sec",
+                  label: "Profile to matched schemes",
+                  tint: "rgba(6,182,212,0.4)",
+                },
               ].map((s) => (
-                <div key={s.label} className="px-6 sm:px-10 py-8">
+                <div
+                  key={s.label}
+                  className="relative glass rounded-2xl p-6 overflow-hidden group hover:bg-[color:var(--surface-2)] transition-colors"
+                >
                   <div
-                    className="font-display italic text-5xl sm:text-6xl leading-none"
-                    style={{ color: s.accent }}
-                  >
-                    {s.stat}
+                    aria-hidden
+                    className="absolute -top-12 -right-12 h-32 w-32 rounded-full blur-2xl opacity-60 group-hover:opacity-100 transition-opacity"
+                    style={{ background: s.tint }}
+                  />
+                  <div className="relative">
+                    <p className="text-3xl sm:text-4xl font-semibold tracking-tight text-gradient-soft">
+                      {s.num}
+                    </p>
+                    <p className="mt-2 text-sm text-[color:var(--text-secondary)]">
+                      {s.label}
+                    </p>
                   </div>
-                  <p className="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]">
-                    {s.label}
-                  </p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* FORM */}
-          <section ref={formRef} className="mx-auto max-w-3xl px-6 sm:px-10 py-20 sm:py-28">
-            <CornerMark label="Eight questions" className="mb-8" />
-            <h2 className="font-display text-5xl sm:text-6xl leading-[0.98] text-balance text-[color:var(--cream)] mb-4">
-              Tell us about <span className="italic text-[color:var(--marigold)]">you</span>.
-            </h2>
-            <p className="text-[color:var(--cream-soft)] text-lg leading-relaxed text-pretty max-w-xl mb-14">
-              The more accurate your answers, the better the match. Nothing is
-              stored.
-            </p>
-            <ProfileForm
-              onResults={setResults}
-              onLoadingChange={setLoading}
-              loading={loading}
-            />
+          <section ref={formRef} className="relative">
+            <div className="aurora aurora-pink opacity-40" aria-hidden />
+            <div className="relative mx-auto max-w-3xl px-5 sm:px-8 py-16 sm:py-24">
+              <div className="rounded-3xl glass-strong p-6 sm:p-10">
+                <div className="inline-flex items-center gap-2 rounded-full bg-[color:var(--surface-2)] border border-[color:var(--line)] px-3 py-1.5 text-xs text-[color:var(--text-secondary)] mb-6">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--violet)]" />
+                  Three quick sections · about a minute
+                </div>
+                <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.02] text-balance">
+                  <span className="text-gradient-soft">Tell us about </span>
+                  <span className="text-gradient">you.</span>
+                </h2>
+                <p className="mt-3 text-[color:var(--text-secondary)] text-pretty leading-relaxed max-w-xl mb-10">
+                  The more accurate your answers, the better the match. Nothing
+                  is stored.
+                </p>
+
+                <ProfileForm
+                  onResults={setResults}
+                  onLoadingChange={setLoading}
+                  loading={loading}
+                />
+              </div>
+            </div>
           </section>
         </main>
       )}

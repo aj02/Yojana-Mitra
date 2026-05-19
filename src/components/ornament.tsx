@@ -1,93 +1,38 @@
-type Props = {
-  className?: string;
-  size?: number;
-  color?: string;
-};
+import { Sparkles } from "lucide-react";
 
-export function Ornament({ className, size = 48, color = "currentColor" }: Props) {
-  return (
-    <svg
-      aria-hidden
-      width={size}
-      height={size}
-      viewBox="0 0 80 80"
-      fill="none"
-      className={className}
-      style={{ color }}
-    >
-      <g stroke="currentColor" strokeWidth="1.5" fill="none">
-        <circle cx="40" cy="40" r="36" />
-        <circle cx="40" cy="40" r="22" />
-        <circle cx="40" cy="40" r="8" />
-        <path d="M40 4 V76 M4 40 H76 M14.6 14.6 L65.4 65.4 M14.6 65.4 L65.4 14.6" />
-        <path d="M40 18 L48 30 L62 32 L52 42 L54 56 L40 50 L26 56 L28 42 L18 32 L32 30 Z" />
-      </g>
-      <circle cx="40" cy="40" r="2.5" fill="currentColor" />
-    </svg>
-  );
-}
-
-export function StarBurst({ className, size = 28, color = "currentColor" }: Props) {
-  return (
-    <svg
-      aria-hidden
-      width={size}
-      height={size}
-      viewBox="0 0 32 32"
-      fill="none"
-      className={className}
-      style={{ color }}
-    >
-      <g stroke="currentColor" strokeWidth="1.5">
-        <path d="M16 2 V30 M2 16 H30 M5.5 5.5 L26.5 26.5 M5.5 26.5 L26.5 5.5" />
-      </g>
-    </svg>
-  );
-}
-
-export function BlockPrintBand({ className }: { className?: string }) {
+export function LogoMark({ size = 32, className }: { size?: number; className?: string }) {
   return (
     <div
-      aria-hidden
-      className={`flex items-center gap-3 overflow-hidden whitespace-nowrap ${className ?? ""}`}
+      className={`relative inline-flex items-center justify-center ${className ?? ""}`}
+      style={{ width: size, height: size }}
     >
-      <div className="marquee-track flex gap-8 shrink-0 text-[color:var(--cream-soft)]">
-        {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="flex gap-8 items-center shrink-0">
-            {[
-              "PENSIONS",
-              "HOUSING",
-              "SCHOLARSHIPS",
-              "CASH TRANSFERS",
-              "HEALTH COVER",
-              "INSURANCE",
-              "SKILL TRAINING",
-              "MUDRA LOANS",
-              "FREE LPG",
-              "MATERNITY BENEFITS",
-              "FARMER SUPPORT",
-              "DISABILITY AID",
-            ].map((w) => (
-              <span key={w} className="flex items-center gap-3 shrink-0">
-                <StarBurst size={14} />
-                <span className="font-mono text-sm tracking-[0.2em]">{w}</span>
-              </span>
-            ))}
-          </div>
-        ))}
-      </div>
+      <svg
+        aria-hidden
+        width={size}
+        height={size}
+        viewBox="0 0 32 32"
+        fill="none"
+        className="relative"
+      >
+        <defs>
+          <linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#a855f7" />
+            <stop offset="50%" stopColor="#ec4899" />
+            <stop offset="100%" stopColor="#06b6d4" />
+          </linearGradient>
+        </defs>
+        <rect x="1" y="1" width="30" height="30" rx="9" fill="url(#logo-grad)" />
+        <path
+          d="M11 11 L21 11 M11 16 L21 16 M11 21 L17 21"
+          stroke="rgba(8,8,12,0.85)"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </svg>
     </div>
   );
 }
 
-export function CornerMark({ label, className }: { label: string; className?: string }) {
-  return (
-    <div
-      className={`inline-flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)] ${className ?? ""}`}
-    >
-      <span className="h-px w-6 bg-[color:var(--cream-soft)]" />
-      {label}
-      <span className="h-px w-6 bg-[color:var(--cream-soft)]" />
-    </div>
-  );
+export function Sparkle({ size = 16, className }: { size?: number; className?: string }) {
+  return <Sparkles size={size} className={className} />;
 }
