@@ -13,6 +13,8 @@ type Props = {
   id?: string;
   ariaLabel?: string;
   invalid?: boolean;
+  /** When set, renders as a floating-label field (matches FloatingInput). */
+  label?: string;
 };
 
 export function Combobox({
@@ -24,6 +26,7 @@ export function Combobox({
   id,
   ariaLabel,
   invalid = false,
+  label,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -112,19 +115,23 @@ export function Combobox({
     }
   }
 
+  const hasFloating = !!label;
+  const showFloating = hasFloating && (open || !!value);
+
   return (
     <div ref={rootRef} className="relative">
       <button
         ref={triggerRef}
         type="button"
         id={id}
-        aria-label={ariaLabel}
+        aria-label={ariaLabel ?? label}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={toggleMenu}
         onKeyDown={handleTriggerKey}
         className={cn(
-          "relative h-12 w-full rounded-xl bg-[color:var(--surface)] border px-4 pr-11 text-left flex items-center transition-all duration-200 outline-none",
+          "relative w-full rounded-xl bg-[color:var(--surface)] border px-4 pr-11 text-left flex items-center transition-all duration-200 outline-none",
+          hasFloating ? "h-14 pt-5 pb-1" : "h-14",
           "hover:bg-[color:var(--surface-2)]",
           open
             ? "border-[color:var(--violet)] bg-[color:var(--surface-2)] shadow-[0_0_0_4px_rgba(168,85,247,0.18)]"
@@ -133,10 +140,31 @@ export function Combobox({
             : "border-[color:var(--line)] hover:border-white/20",
           value
             ? "text-[color:var(--text-primary)]"
+            : hasFloating
+            ? "text-transparent"
             : "text-[color:var(--text-muted)]"
         )}
       >
-        <span className="truncate">{value || placeholder}</span>
+        {hasFloating && (
+          <span
+            className={cn(
+              "pointer-events-none absolute left-4 transition-all duration-200 origin-left",
+              showFloating
+                ? "top-1.5 text-[0.65rem] uppercase tracking-[0.12em] font-medium"
+                : "top-1/2 -translate-y-1/2 text-base",
+              open
+                ? "text-[color:var(--violet)]"
+                : invalid
+                ? "text-[color:var(--pink)]"
+                : "text-[color:var(--text-muted)]"
+            )}
+          >
+            {label}
+          </span>
+        )}
+        <span className="truncate w-full">
+          {value || (hasFloating ? "" : placeholder)}
+        </span>
         <ChevronDown
           className={cn(
             "absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 transition-all duration-200",

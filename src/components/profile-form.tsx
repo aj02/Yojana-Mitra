@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Label } from "@/components/ui/label";
 import { SectionHeader } from "@/components/section-header";
 import { ChipGroup, ChipMulti } from "@/components/chip-group";
 import { Combobox } from "@/components/combobox";
@@ -26,7 +25,7 @@ type Props = {
 };
 
 const labelClass =
-  "text-[0.7rem] uppercase tracking-[0.14em] text-[color:var(--text-muted)] font-medium";
+  "block text-[0.7rem] uppercase tracking-[0.14em] text-[color:var(--text-muted)] font-medium";
 
 export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
   const [age, setAge] = useState<string>("");
@@ -124,8 +123,8 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
           title="Who you are"
           hint="A few basics — age, gender, where you live."
         />
-        <div className="grid gap-5 sm:grid-cols-12">
-          <div className="space-y-1.5 sm:col-span-4">
+        <div className="grid gap-4 sm:gap-5 sm:grid-cols-12">
+          <div className="sm:col-span-4">
             <FloatingInput
               label="Age"
               type="number"
@@ -137,28 +136,25 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
               onClear={() => setAge("")}
               isValid={ageValid}
               invalid={age !== "" && !ageValid}
-              hint={age !== "" && !ageValid ? "Enter a number between 0 and 120" : undefined}
+              hint={age !== "" && !ageValid ? "Between 0 and 120" : undefined}
             />
           </div>
-          <div className="space-y-1.5 sm:col-span-4">
-            <Label className={labelClass}>Gender</Label>
+          <div className="sm:col-span-4">
             <Combobox
+              label="Gender"
               options={GENDERS}
               value={gender}
               onChange={setGender}
-              placeholder="Select gender"
-              ariaLabel="Gender"
             />
           </div>
-          <div className="space-y-1.5 sm:col-span-4">
-            <Label className={labelClass}>State or UT</Label>
+          <div className="sm:col-span-4">
             <Combobox
+              label="State or UT"
               options={STATES}
               value={state}
               onChange={setState}
               placeholder="Search 36 states & UTs"
               searchable
-              ariaLabel="State or Union Territory"
             />
           </div>
         </div>
@@ -172,31 +168,30 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
         />
         <div className="space-y-8">
           <div className="space-y-3">
-            <Label className={labelClass}>
+            <span className={labelClass}>
               Occupation {occupation && <Selected />}
-            </Label>
+            </span>
             <ChipGroup options={OCCUPATIONS} value={occupation} onChange={setOccupation} ariaLabel="Occupation" />
           </div>
           <div className="space-y-3">
-            <Label className={labelClass}>
+            <span className={labelClass}>
               Annual household income {income && <Selected />}
-            </Label>
+            </span>
             <ChipGroup options={INCOMES} value={income} onChange={setIncome} ariaLabel="Income" />
           </div>
           <div className="space-y-3">
-            <Label className={labelClass}>
+            <span className={labelClass}>
               Social category {category && <Selected />}
-            </Label>
+            </span>
             <ChipGroup options={CATEGORIES} value={category} onChange={setCategory} ariaLabel="Social category" />
           </div>
-          <div className="space-y-1.5 max-w-sm">
-            <Label className={labelClass}>Education</Label>
+          <div className="max-w-sm">
             <Combobox
+              label="Education"
               options={EDUCATION_LEVELS}
               value={education}
               onChange={setEducation}
               placeholder="Highest education completed"
-              ariaLabel="Education"
             />
           </div>
         </div>

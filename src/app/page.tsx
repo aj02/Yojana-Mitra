@@ -8,7 +8,7 @@ import { HeroVisual } from "@/components/hero-visual";
 import { ProfileForm } from "@/components/profile-form";
 import { ResultsView } from "@/components/results-view";
 import type { SchemesResponse } from "@/lib/schema";
-import { Sparkles, ArrowDown, Zap, Lock, Languages } from "lucide-react";
+import { Sparkles, ArrowDown, Zap, Lock, Languages, Wallet, Layers, Timer } from "lucide-react";
 
 const ROTATING_BENEFITS = [
   "pensions",
@@ -103,36 +103,62 @@ export default function Home() {
             <div className="grid gap-4 sm:grid-cols-3">
               {[
                 {
-                  num: "₹70K Cr+",
+                  num: "₹70K",
+                  unit: "Cr+",
                   label: "Unclaimed welfare in 2024",
-                  tint: "rgba(168,85,247,0.4)",
+                  Icon: Wallet,
+                  from: "#a855f7",
+                  to: "#ec4899",
                 },
                 {
-                  num: "950+",
+                  num: "950",
+                  unit: "+",
                   label: "Active central & state schemes",
-                  tint: "rgba(236,72,153,0.4)",
+                  Icon: Layers,
+                  from: "#ec4899",
+                  to: "#f97316",
                 },
                 {
-                  num: "<8 sec",
+                  num: "<8",
+                  unit: "sec",
                   label: "Profile to matched schemes",
-                  tint: "rgba(6,182,212,0.4)",
+                  Icon: Timer,
+                  from: "#06b6d4",
+                  to: "#3b82f6",
                 },
-              ].map((s) => (
+              ].map(({ num, unit, label, Icon, from, to }) => (
                 <div
-                  key={s.label}
-                  className="relative glass rounded-2xl p-6 overflow-hidden group hover:bg-[color:var(--surface-2)] transition-colors"
+                  key={label}
+                  className="group relative glass rounded-2xl p-6 overflow-hidden flex flex-col justify-between min-h-[170px] hover:bg-[color:var(--surface-2)] transition-colors"
                 >
                   <div
                     aria-hidden
-                    className="absolute -top-12 -right-12 h-32 w-32 rounded-full blur-2xl opacity-60 group-hover:opacity-100 transition-opacity"
-                    style={{ background: s.tint }}
+                    className="absolute -top-16 -right-16 h-40 w-40 rounded-full blur-3xl opacity-60 group-hover:opacity-100 transition-opacity"
+                    style={{
+                      background: `radial-gradient(circle, ${from}, transparent 70%)`,
+                    }}
                   />
-                  <div className="relative">
-                    <p className="text-3xl sm:text-4xl font-semibold tracking-tight text-gradient-soft">
-                      {s.num}
-                    </p>
-                    <p className="mt-2 text-sm text-[color:var(--text-secondary)]">
-                      {s.label}
+                  <div className="relative flex items-center justify-between">
+                    <div
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-lg"
+                      style={{
+                        background: `linear-gradient(135deg, ${from}, ${to})`,
+                      }}
+                    >
+                      <Icon className="h-4 w-4" />
+                    </div>
+                  </div>
+                  <div className="relative mt-4">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-5xl sm:text-6xl font-semibold tracking-tight text-gradient-soft tabular-nums leading-none">
+                        {num}
+                      </span>
+                      <span className="text-xl sm:text-2xl font-semibold tracking-tight text-[color:var(--text-secondary)] leading-none">
+                        {unit}
+                      </span>
+                    </div>
+                    <p className="mt-3 text-sm text-[color:var(--text-secondary)] leading-snug">
+                      {label}
                     </p>
                   </div>
                 </div>
