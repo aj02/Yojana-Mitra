@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { SectionHeader } from "@/components/section-header";
 import { ChipGroup, ChipMulti } from "@/components/chip-group";
+import { Combobox } from "@/components/combobox";
+import { FloatingInput } from "@/components/floating-input";
 import {
   STATES,
   OCCUPATIONS,
@@ -14,7 +16,7 @@ import {
   GENDERS,
 } from "@/lib/constants";
 import { toast } from "sonner";
-import { ArrowRight, Loader2, ChevronDown } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import type { Profile, SchemesResponse } from "@/lib/schema";
 
 type Props = {
@@ -24,31 +26,45 @@ type Props = {
 };
 
 const labelClass =
-  "text-xs uppercase tracking-[0.12em] text-[color:var(--text-muted)] font-medium";
-const inputClass =
-  "h-12 w-full rounded-xl bg-[color:var(--surface)] border border-[color:var(--line)] px-4 text-[color:var(--text-primary)] placeholder:text-[color:var(--text-muted)] outline-none transition-all focus:border-[color:var(--violet)] focus:bg-[color:var(--surface-2)] focus:shadow-[0_0_0_4px_rgba(168,85,247,0.15)]";
+  "text-[0.7rem] uppercase tracking-[0.14em] text-[color:var(--text-muted)] font-medium";
 
 export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
   const [age, setAge] = useState<string>("");
-  const [gender, setGender] = useState<(typeof GENDERS)[number] | "">("");
+  const [gender, setGender] = useState<string>("");
   const [state, setState] = useState<string>("");
   const [occupation, setOccupation] = useState<(typeof OCCUPATIONS)[number] | null>(null);
   const [income, setIncome] = useState<(typeof INCOMES)[number] | null>(null);
   const [category, setCategory] = useState<(typeof CATEGORIES)[number] | null>(null);
-  const [education, setEducation] = useState<(typeof EDUCATION_LEVELS)[number] | "">("");
+  const [education, setEducation] = useState<string>("");
   const [specials, setSpecials] = useState<(typeof SPECIAL_STATUSES)[number][]>([]);
 
   const ageNum = Number(age);
   const ageValid = age !== "" && Number.isFinite(ageNum) && ageNum >= 0 && ageNum <= 120;
   const stateValid = (STATES as readonly string[]).includes(state);
+  const genderValid = (GENDERS as readonly string[]).includes(gender);
+  const educationValid = (EDUCATION_LEVELS as readonly string[]).includes(education);
   const ready =
     ageValid &&
-    !!gender &&
+    genderValid &&
     stateValid &&
     !!occupation &&
     !!income &&
     !!category &&
-    !!education;
+    educationValid;
+
+  const completed = useMemo(() => {
+    let n = 0;
+    if (ageValid) n++;
+    if (genderValid) n++;
+    if (stateValid) n++;
+    if (occupation) n++;
+    if (income) n++;
+    if (category) n++;
+    if (educationValid) n++;
+    return n;
+  }, [ageValid, genderValid, stateValid, occupation, income, category, educationValid]);
+  const total = 7;
+  const pct = Math.round((completed / total) * 100);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -87,6 +103,21 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
 
   return (
     <form onSubmit={submit} className="space-y-14 sm:space-y-16">
+      {/* Completion bar */}
+      <div className="sticky top-[57px] z-10 -mx-2 mb-4 backdrop-blur-md">
+        <div className="flex items-center gap-3 px-2 py-2">
+          <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-white/8">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-[color:var(--violet)] via-[color:var(--pink)] to-[color:var(--cyan)] transition-[width] duration-500 ease-out"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          <span className="font-mono text-[0.7rem] text-[color:var(--text-secondary)] tabular-nums shrink-0">
+            {completed}/{total}
+          </span>
+        </div>
+      </div>
+
       <section>
         <SectionHeader
           number="01"
@@ -94,54 +125,41 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
           hint="A few basics — age, gender, where you live."
         />
         <div className="grid gap-5 sm:grid-cols-12">
-          <div className="space-y-2 sm:col-span-3">
-            <Label htmlFor="age" className={labelClass}>Age</Label>
-            <input
-              id="age"
+          <div className="space-y-1.5 sm:col-span-4">
+            <FloatingInput
+              label="Age"
               type="number"
               inputMode="numeric"
               min={0}
               max={120}
               value={age}
-              placeholder="34"
               onChange={(e) => setAge(e.target.value)}
-              className={inputClass}
+              onClear={() => setAge("")}
+              isValid={ageValid}
+              invalid={age !== "" && !ageValid}
+              hint={age !== "" && !ageValid ? "Enter a number between 0 and 120" : undefined}
             />
           </div>
-          <div className="space-y-2 sm:col-span-5">
-            <Label htmlFor="gender" className={labelClass}>Gender</Label>
-            <div className="relative">
-              <select
-                id="gender"
-                value={gender}
-                onChange={(e) => setGender(e.target.value as (typeof GENDERS)[number])}
-                className={inputClass + " appearance-none pr-10 cursor-pointer"}
-              >
-                <option value="">Select</option>
-                {GENDERS.map((g) => (
-                  <option key={g} value={g}>{g}</option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-muted)]" />
-            </div>
+          <div className="space-y-1.5 sm:col-span-4">
+            <Label className={labelClass}>Gender</Label>
+            <Combobox
+              options={GENDERS}
+              value={gender}
+              onChange={setGender}
+              placeholder="Select gender"
+              ariaLabel="Gender"
+            />
           </div>
-          <div className="space-y-2 sm:col-span-4">
-            <Label htmlFor="state" className={labelClass}>State / UT</Label>
-            <input
-              id="state"
-              list="states-list"
+          <div className="space-y-1.5 sm:col-span-4">
+            <Label className={labelClass}>State or UT</Label>
+            <Combobox
+              options={STATES}
               value={state}
-              placeholder="e.g. Maharashtra"
-              onChange={(e) => setState(e.target.value)}
-              className={inputClass}
-              autoComplete="off"
+              onChange={setState}
+              placeholder="Search 36 states & UTs"
+              searchable
+              ariaLabel="State or Union Territory"
             />
-            <datalist id="states-list">
-              {STATES.map((s) => <option key={s} value={s} />)}
-            </datalist>
-            {state && !stateValid && (
-              <p className="text-xs text-[color:var(--pink)]">Pick one from the list.</p>
-            )}
           </div>
         </div>
       </section>
@@ -154,33 +172,32 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
         />
         <div className="space-y-8">
           <div className="space-y-3">
-            <Label className={labelClass}>Occupation</Label>
+            <Label className={labelClass}>
+              Occupation {occupation && <Selected />}
+            </Label>
             <ChipGroup options={OCCUPATIONS} value={occupation} onChange={setOccupation} ariaLabel="Occupation" />
           </div>
           <div className="space-y-3">
-            <Label className={labelClass}>Annual household income</Label>
+            <Label className={labelClass}>
+              Annual household income {income && <Selected />}
+            </Label>
             <ChipGroup options={INCOMES} value={income} onChange={setIncome} ariaLabel="Income" />
           </div>
           <div className="space-y-3">
-            <Label className={labelClass}>Social category</Label>
+            <Label className={labelClass}>
+              Social category {category && <Selected />}
+            </Label>
             <ChipGroup options={CATEGORIES} value={category} onChange={setCategory} ariaLabel="Social category" />
           </div>
-          <div className="space-y-2 max-w-sm">
-            <Label htmlFor="education" className={labelClass}>Education</Label>
-            <div className="relative">
-              <select
-                id="education"
-                value={education}
-                onChange={(e) => setEducation(e.target.value as (typeof EDUCATION_LEVELS)[number])}
-                className={inputClass + " appearance-none pr-10 cursor-pointer"}
-              >
-                <option value="">Select</option>
-                {EDUCATION_LEVELS.map((e) => (
-                  <option key={e} value={e}>{e}</option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-muted)]" />
-            </div>
+          <div className="space-y-1.5 max-w-sm">
+            <Label className={labelClass}>Education</Label>
+            <Combobox
+              options={EDUCATION_LEVELS}
+              value={education}
+              onChange={setEducation}
+              placeholder="Highest education completed"
+              ariaLabel="Education"
+            />
           </div>
         </div>
       </section>
@@ -198,7 +215,9 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
           ariaLabel="Special statuses"
         />
         <p className="mt-4 text-xs text-[color:var(--text-muted)]">
-          {specials.length === 0 ? "Nothing selected · this is fine" : `${specials.length} selected`}
+          {specials.length === 0
+            ? "Nothing selected · this is fine"
+            : `${specials.length} selected`}
         </p>
       </section>
 
@@ -222,10 +241,18 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
         </button>
         {!ready && !loading && (
           <p className="text-xs text-[color:var(--text-muted)]">
-            Complete the required fields above
+            {total - completed} field{total - completed === 1 ? "" : "s"} to go
           </p>
         )}
       </div>
     </form>
+  );
+}
+
+function Selected() {
+  return (
+    <span className="ml-1.5 inline-flex h-4 items-center rounded-full bg-gradient-to-r from-[color:var(--violet)]/30 to-[color:var(--pink)]/30 border border-white/10 px-1.5 text-[0.6rem] tracking-normal normal-case text-[color:var(--text-primary)]">
+      set
+    </span>
   );
 }
