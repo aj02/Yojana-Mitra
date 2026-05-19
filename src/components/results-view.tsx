@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { SchemesResponse } from "@/lib/schema";
 import { SchemeCard } from "@/components/scheme-card";
-import { OrnamentDivider } from "@/components/ornament";
+import { BlockPrintBand, CornerMark, Ornament } from "@/components/ornament";
 
 type Props = {
   data: SchemesResponse;
@@ -30,68 +30,101 @@ export function ResultsView({ data, onReset }: Props) {
   }, [data.schemes, filter, activeCategory]);
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-12 sm:px-8 sm:py-16">
-      <p className="text-sm uppercase tracking-[0.2em] text-[color:var(--ink-muted)] mb-3">
-        Your matches
-      </p>
-      <h1 className="font-display text-3xl sm:text-4xl leading-tight text-[color:var(--ink)] text-balance">
-        {data.summary}
-      </h1>
+    <div className="relative">
+      <section className="mx-auto max-w-5xl px-6 sm:px-10 pt-14 sm:pt-20 pb-10">
+        <CornerMark label={`${data.schemes.length} matches · sorted by fit`} className="mb-6" />
+        <div className="grid gap-10 sm:grid-cols-12 items-start">
+          <div className="sm:col-span-9">
+            <h1 className="font-display text-4xl sm:text-6xl leading-[0.98] text-balance">
+              <span className="text-[color:var(--cream)]">Schemes for</span>
+              <br />
+              <span className="text-[color:var(--marigold)] italic">your situation.</span>
+            </h1>
+            <p className="mt-6 text-lg sm:text-xl text-[color:var(--cream-soft)] text-pretty leading-relaxed max-w-2xl">
+              {data.summary}
+            </p>
+          </div>
+          <div className="sm:col-span-3 flex sm:justify-end">
+            <div className="text-[color:var(--vermilion)] opacity-60">
+              <Ornament size={96} />
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <div className="mt-8 flex flex-wrap items-center gap-2">
-        <FilterChip active={filter === "all"} onClick={() => setFilter("all")}>
-          All ({data.schemes.length})
-        </FilterChip>
-        <FilterChip active={filter === "top"} onClick={() => setFilter("top")}>
-          Top match (≥85%)
-        </FilterChip>
-        {categories.map((c) => (
-          <FilterChip
-            key={c}
-            active={activeCategory === c}
-            onClick={() => setActiveCategory(activeCategory === c ? null : c)}
-          >
-            {c}
-          </FilterChip>
-        ))}
+      <div className="border-y border-[color:var(--line)] py-3">
+        <BlockPrintBand />
       </div>
 
-      <div className="mt-10 space-y-6">
+      {/* Filter bar */}
+      <div className="sticky top-0 z-20 bg-[color:var(--night)]/95 backdrop-blur border-b border-[color:var(--line)]">
+        <div className="mx-auto max-w-5xl px-6 sm:px-10 py-4 flex flex-wrap items-center gap-2">
+          <span className="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)] mr-2">
+            Filter ·
+          </span>
+          <FilterChip active={filter === "all" && !activeCategory} onClick={() => { setFilter("all"); setActiveCategory(null); }}>
+            All ({data.schemes.length})
+          </FilterChip>
+          <FilterChip active={filter === "top"} onClick={() => setFilter(filter === "top" ? "all" : "top")}>
+            Top match ≥85
+          </FilterChip>
+          <span className="h-5 w-px bg-[color:var(--line)] mx-1" />
+          {categories.map((c) => (
+            <FilterChip
+              key={c}
+              active={activeCategory === c}
+              onClick={() => setActiveCategory(activeCategory === c ? null : c)}
+            >
+              {c}
+            </FilterChip>
+          ))}
+        </div>
+      </div>
+
+      <section className="mx-auto max-w-5xl px-6 sm:px-10 py-12 sm:py-16">
         {filtered.length === 0 ? (
-          <p className="text-[color:var(--ink-muted)] italic">
+          <p className="font-display italic text-2xl text-[color:var(--cream-soft)]">
             No schemes match these filters. Clear them to see all matches.
           </p>
         ) : (
-          filtered.map((scheme, i) => (
-            <SchemeCard key={scheme.name + i} scheme={scheme} index={i} />
-          ))
+          <div className="grid gap-8 sm:gap-10">
+            {filtered.map((scheme, i) => (
+              <SchemeCard key={scheme.name + i} scheme={scheme} index={i} />
+            ))}
+          </div>
         )}
-      </div>
+      </section>
 
-      <OrnamentDivider />
+      <section className="mx-auto max-w-5xl px-6 sm:px-10 pb-16">
+        <div className="border-2 border-[color:var(--vermilion)] p-6 sm:p-8 stamp-shadow-vermilion">
+          <p className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-[color:var(--vermilion)] mb-3">
+            ⚠ A note before you apply
+          </p>
+          <p className="text-[color:var(--cream)] text-pretty leading-relaxed text-base sm:text-lg">
+            These are AI-generated matches. Scheme eligibility, benefits,
+            deadlines, and application steps change.{" "}
+            <strong className="text-[color:var(--marigold)]">
+              Always verify on the official Government of India or your state
+              government portal
+            </strong>{" "}
+            before applying. Your nearest Common Service Centre (CSC),
+            panchayat office, or municipal ward can help.
+          </p>
+        </div>
+      </section>
 
-      <div className="rounded-lg border border-[color:var(--line)] bg-[color:var(--paper-card)] p-6 text-sm leading-relaxed text-[color:var(--ink-soft)]">
-        <p className="font-display text-base text-[color:var(--ink)] mb-2">
-          A note before you apply
-        </p>
-        <p>
-          These suggestions are generated by an AI based on the profile you
-          shared. Scheme eligibility, benefits, deadlines, and application
-          steps change over time. <strong>Always verify the details on the
-          official Government of India or your state government portal</strong>{" "}
-          before applying. When in doubt, your nearest Common Service Centre
-          (CSC), panchayat office, or municipal ward office can help.
-        </p>
-      </div>
-
-      <div className="mt-10 flex justify-center">
+      <section className="mx-auto max-w-5xl px-6 sm:px-10 pb-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <button
           onClick={onReset}
-          className="text-sm text-[color:var(--terracotta)] underline-offset-4 hover:underline"
+          className="group inline-flex items-center gap-3 font-display italic text-xl sm:text-2xl text-[color:var(--marigold)] hover:text-[color:var(--vermilion)] transition-colors"
         >
-          ← Start over with a different profile
+          <span className="transition-transform group-hover:-translate-x-1">←</span>
+          Different profile
         </button>
-      </div>
+        <p className="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]">
+          Showing {filtered.length} of {data.schemes.length}
+        </p>
+      </section>
     </div>
   );
 }
@@ -110,10 +143,10 @@ function FilterChip({
       type="button"
       onClick={onClick}
       className={
-        "rounded-full border px-3 py-1.5 text-xs transition-colors " +
+        "font-mono text-[0.7rem] uppercase tracking-[0.15em] px-3 py-1.5 border-2 transition-colors " +
         (active
-          ? "border-[color:var(--ink)] bg-[color:var(--ink)] text-[color:var(--paper-card)]"
-          : "border-[color:var(--line)] text-[color:var(--ink-soft)] hover:border-[color:var(--ink-muted)]")
+          ? "border-[color:var(--marigold)] bg-[color:var(--marigold)] text-[color:var(--night)]"
+          : "border-[color:var(--cream-soft)]/50 text-[color:var(--cream-soft)] hover:border-[color:var(--marigold)] hover:text-[color:var(--marigold)]")
       }
     >
       {children}

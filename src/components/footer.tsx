@@ -1,23 +1,53 @@
-import { Ornament } from "./ornament";
+import { BlockPrintBand, Ornament } from "./ornament";
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-[color:var(--line)]">
-      <div className="mx-auto max-w-2xl px-6 py-10 sm:px-8 text-sm text-[color:var(--ink-muted)] space-y-4">
-        <div className="flex items-center gap-3">
-          <Ornament size={18} />
-          <span className="font-display text-[color:var(--ink)]">Yojana Mitra</span>
+    <footer className="mt-32 border-t border-[color:var(--line)]">
+      <div className="border-y border-[color:var(--line)] py-4">
+        <BlockPrintBand />
+      </div>
+      <div className="mx-auto max-w-6xl px-6 py-12 sm:px-10 grid gap-10 sm:grid-cols-3 text-sm">
+        <div className="space-y-3">
+          <div className="text-[color:var(--marigold)]">
+            <Ornament size={28} />
+          </div>
+          <p className="font-display italic text-2xl text-[color:var(--cream)]">
+            Yojana Mitra
+          </p>
+          <p className="text-[color:var(--cream-soft)] text-pretty leading-relaxed">
+            A discovery layer for Indian welfare. Built so that more of what
+            you&apos;re owed actually reaches you.
+          </p>
         </div>
-        <p className="text-pretty leading-relaxed">
-          AI-generated suggestions. Always verify scheme details, eligibility,
-          deadlines and application steps on the official Government of India
-          and your state portal before applying. This site is not affiliated
-          with any government body.
-        </p>
-        <p className="text-xs">
-          Built with public scheme data and large language models. No personal
-          data is stored.
-        </p>
+        <div className="space-y-3">
+          <p className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-[color:var(--marigold)]">
+            Disclaimer
+          </p>
+          <p className="text-[color:var(--cream-soft)] text-pretty leading-relaxed">
+            AI-generated. Eligibility, deadlines, and amounts change. Always
+            verify on the official Government of India or your state portal
+            before applying. Not affiliated with any government body.
+          </p>
+        </div>
+        <div className="space-y-3">
+          <p className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-[color:var(--marigold)]">
+            Privacy
+          </p>
+          <p className="text-[color:var(--cream-soft)] text-pretty leading-relaxed">
+            No accounts. No tracking pixels. Profile data is sent once to
+            generate matches and is not stored.
+          </p>
+        </div>
+      </div>
+      <div className="border-t border-[color:var(--line)]">
+        <div className="mx-auto max-w-6xl px-6 sm:px-10 py-4 flex flex-wrap items-center justify-between gap-2">
+          <span className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-[color:var(--cream-soft)]">
+            © 2026 · Civic open-source
+          </span>
+          <span className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-[color:var(--cream-soft)]">
+            Made with उम्मीद
+          </span>
+        </div>
       </div>
     </footer>
   );

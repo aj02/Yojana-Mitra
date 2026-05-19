@@ -1,12 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { SectionHeader } from "@/components/section-header";
 import { ChipGroup, ChipMulti } from "@/components/chip-group";
-import { OrnamentDivider } from "@/components/ornament";
 import {
   STATES,
   OCCUPATIONS,
@@ -25,6 +22,12 @@ type Props = {
   onLoadingChange: (loading: boolean) => void;
   loading: boolean;
 };
+
+const inputBase =
+  "h-12 w-full bg-transparent border-b-2 border-[color:var(--cream-soft)] focus:border-[color:var(--marigold)] outline-none px-1 text-[color:var(--cream)] placeholder:text-[color:var(--cream-soft)]/50 transition-colors font-display text-xl";
+
+const labelBase =
+  "font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]";
 
 export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
   const [age, setAge] = useState<string>("");
@@ -84,101 +87,122 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-16 sm:space-y-20">
+    <form onSubmit={submit} className="space-y-20 sm:space-y-24">
       <section>
-        <SectionHeader number="01" title="Who you are" hint="Basic profile — age, gender, where you live." />
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="age" className="text-[color:var(--ink-soft)]">Age</Label>
-            <Input
+        <SectionHeader
+          number="01"
+          title="Who you are"
+          hint="A few basics — age, where you live, how you'd describe yourself."
+        />
+        <div className="grid gap-x-8 gap-y-10 sm:grid-cols-12">
+          <div className="space-y-2 sm:col-span-3">
+            <Label htmlFor="age" className={labelBase}>Age</Label>
+            <input
               id="age"
               type="number"
               inputMode="numeric"
               min={0}
               max={120}
               value={age}
-              placeholder="e.g. 34"
+              placeholder="34"
               onChange={(e) => setAge(e.target.value)}
-              className="h-11 bg-[color:var(--paper-card)] border-[color:var(--line)] text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)] focus-visible:ring-[color:var(--terracotta-soft)]"
+              className={inputBase}
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="gender" className="text-[color:var(--ink-soft)]">Gender</Label>
+          <div className="space-y-2 sm:col-span-9">
+            <Label htmlFor="gender" className={labelBase}>Gender</Label>
             <select
               id="gender"
               value={gender}
               onChange={(e) => setGender(e.target.value as (typeof GENDERS)[number])}
-              className="h-11 w-full rounded-md border border-[color:var(--line)] bg-[color:var(--paper-card)] px-3 text-sm text-[color:var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--terracotta-soft)]"
+              className={inputBase + " appearance-none cursor-pointer"}
+              style={{
+                backgroundImage:
+                  "linear-gradient(45deg, transparent 50%, var(--marigold) 50%), linear-gradient(135deg, var(--marigold) 50%, transparent 50%)",
+                backgroundPosition:
+                  "calc(100% - 14px) 1.35rem, calc(100% - 8px) 1.35rem",
+                backgroundSize: "6px 6px, 6px 6px",
+                backgroundRepeat: "no-repeat",
+              }}
             >
-              <option value="">Select…</option>
+              <option value="" className="bg-[color:var(--night)]">Choose…</option>
               {GENDERS.map((g) => (
-                <option key={g} value={g}>{g}</option>
+                <option key={g} value={g} className="bg-[color:var(--night)]">{g}</option>
               ))}
             </select>
           </div>
-          <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="state" className="text-[color:var(--ink-soft)]">State or Union Territory</Label>
-            <Input
+          <div className="space-y-2 sm:col-span-12">
+            <Label htmlFor="state" className={labelBase}>State or Union Territory</Label>
+            <input
               id="state"
               list="states-list"
               value={state}
               placeholder="Start typing… e.g. Maharashtra"
               onChange={(e) => setState(e.target.value)}
-              className="h-11 bg-[color:var(--paper-card)] border-[color:var(--line)] text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)] focus-visible:ring-[color:var(--terracotta-soft)]"
+              className={inputBase}
+              autoComplete="off"
             />
             <datalist id="states-list">
               {STATES.map((s) => <option key={s} value={s} />)}
             </datalist>
             {state && !stateValid && (
-              <p className="text-xs text-[color:var(--terracotta)]">
-                Pick a state from the suggestions.
+              <p className="font-mono text-xs text-[color:var(--vermilion)]">
+                ⚠ Pick one from the list.
               </p>
             )}
           </div>
         </div>
       </section>
 
-      <OrnamentDivider />
-
       <section>
-        <SectionHeader number="02" title="Your situation" hint="What you do, what you earn, where you fit." />
-        <div className="space-y-8">
-          <div className="space-y-3">
-            <Label className="text-[color:var(--ink-soft)]">Occupation</Label>
+        <SectionHeader
+          number="02"
+          title="Your situation"
+          hint="What you do, what you earn, where you fit. Tap one in each row."
+        />
+        <div className="space-y-10">
+          <div className="space-y-4">
+            <Label className={labelBase}>Occupation</Label>
             <ChipGroup options={OCCUPATIONS} value={occupation} onChange={setOccupation} ariaLabel="Occupation" />
           </div>
-          <div className="space-y-3">
-            <Label className="text-[color:var(--ink-soft)]">Annual household income</Label>
+          <div className="space-y-4">
+            <Label className={labelBase}>Annual household income</Label>
             <ChipGroup options={INCOMES} value={income} onChange={setIncome} ariaLabel="Income" />
           </div>
-          <div className="space-y-3">
-            <Label className="text-[color:var(--ink-soft)]">Social category</Label>
+          <div className="space-y-4">
+            <Label className={labelBase}>Social category</Label>
             <ChipGroup options={CATEGORIES} value={category} onChange={setCategory} ariaLabel="Social category" />
           </div>
-          <div className="space-y-3">
-            <Label htmlFor="education" className="text-[color:var(--ink-soft)]">Education</Label>
+          <div className="space-y-2">
+            <Label htmlFor="education" className={labelBase}>Education</Label>
             <select
               id="education"
               value={education}
               onChange={(e) => setEducation(e.target.value as (typeof EDUCATION_LEVELS)[number])}
-              className="h-11 w-full rounded-md border border-[color:var(--line)] bg-[color:var(--paper-card)] px-3 text-sm text-[color:var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--terracotta-soft)]"
+              className={inputBase + " appearance-none cursor-pointer"}
+              style={{
+                backgroundImage:
+                  "linear-gradient(45deg, transparent 50%, var(--marigold) 50%), linear-gradient(135deg, var(--marigold) 50%, transparent 50%)",
+                backgroundPosition:
+                  "calc(100% - 14px) 1.35rem, calc(100% - 8px) 1.35rem",
+                backgroundSize: "6px 6px, 6px 6px",
+                backgroundRepeat: "no-repeat",
+              }}
             >
-              <option value="">Select…</option>
+              <option value="" className="bg-[color:var(--night)]">Choose…</option>
               {EDUCATION_LEVELS.map((e) => (
-                <option key={e} value={e}>{e}</option>
+                <option key={e} value={e} className="bg-[color:var(--night)]">{e}</option>
               ))}
             </select>
           </div>
         </div>
       </section>
 
-      <OrnamentDivider />
-
       <section>
         <SectionHeader
           number="03"
           title="Anything else"
-          hint="Tap all that apply. Many schemes target specific situations."
+          hint="Tap any that apply. Many schemes target specific situations — being a widow, a senior, owning farmland, living rural."
         />
         <ChipMulti
           options={SPECIAL_STATUSES}
@@ -186,29 +210,32 @@ export function ProfileForm({ onResults, onLoadingChange, loading }: Props) {
           onChange={setSpecials}
           ariaLabel="Special statuses"
         />
+        <p className="mt-6 font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]">
+          {specials.length === 0 ? "None selected · optional" : `${specials.length} selected`}
+        </p>
       </section>
 
-      <div className="pt-4">
-        <Button
+      <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+        <button
           type="submit"
           disabled={!ready || loading}
-          className="h-14 w-full sm:w-auto rounded-full bg-[color:var(--terracotta)] px-8 text-base text-[color:var(--paper-card)] hover:bg-[color:var(--terracotta)]/90 disabled:opacity-50"
+          className="group relative inline-flex items-center justify-center gap-3 px-8 py-5 bg-[color:var(--marigold)] text-[color:var(--night)] font-display text-xl tracking-tight border-2 border-[color:var(--marigold)] stamp-shadow-cream transition-all duration-150 hover:bg-[color:var(--vermilion)] hover:border-[color:var(--vermilion)] hover:text-[color:var(--cream)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[color:var(--marigold)] disabled:hover:text-[color:var(--night)]"
         >
           {loading ? (
             <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Finding schemes…
+              <Loader2 className="h-6 w-6 animate-spin" />
+              Finding schemes
             </>
           ) : (
             <>
               Find my schemes
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
             </>
           )}
-        </Button>
+        </button>
         {!ready && (
-          <p className="mt-3 text-xs text-[color:var(--ink-muted)]">
-            Fill all fields above to continue. Special statuses are optional.
+          <p className="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-[color:var(--cream-soft)]">
+            ↑ Complete fields above
           </p>
         )}
       </div>

@@ -9,6 +9,9 @@ type Props<T extends string> = {
   ariaLabel?: string;
 };
 
+const baseClass =
+  "relative font-mono text-[0.78rem] uppercase tracking-[0.12em] px-4 py-2.5 border-2 transition-all duration-150 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none";
+
 export function ChipGroup<T extends string>({
   options,
   value,
@@ -16,11 +19,7 @@ export function ChipGroup<T extends string>({
   ariaLabel,
 }: Props<T>) {
   return (
-    <div
-      role="radiogroup"
-      aria-label={ariaLabel}
-      className="flex flex-wrap gap-2"
-    >
+    <div role="radiogroup" aria-label={ariaLabel} className="flex flex-wrap gap-2.5">
       {options.map((opt) => {
         const selected = opt === value;
         return (
@@ -31,11 +30,10 @@ export function ChipGroup<T extends string>({
             aria-checked={selected}
             onClick={() => onChange(opt)}
             className={cn(
-              "rounded-full border px-4 py-2 text-sm transition-colors",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--terracotta-soft)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--paper)]",
+              baseClass,
               selected
-                ? "border-[color:var(--terracotta)] bg-[color:var(--terracotta)] text-[color:var(--paper-card)]"
-                : "border-[color:var(--line)] bg-transparent text-[color:var(--ink-soft)] hover:border-[color:var(--ink-muted)]"
+                ? "border-[color:var(--marigold)] bg-[color:var(--marigold)] text-[color:var(--night)] stamp-shadow-cream"
+                : "border-[color:var(--cream-soft)] bg-transparent text-[color:var(--cream)] hover:border-[color:var(--marigold)] hover:text-[color:var(--marigold)]"
             )}
           >
             {opt}
@@ -64,11 +62,7 @@ export function ChipMulti<T extends string>({
     else onChange([...values, opt]);
   }
   return (
-    <div
-      role="group"
-      aria-label={ariaLabel}
-      className="flex flex-wrap gap-2"
-    >
+    <div role="group" aria-label={ariaLabel} className="flex flex-wrap gap-2.5">
       {options.map((opt) => {
         const selected = values.includes(opt);
         return (
@@ -78,13 +72,13 @@ export function ChipMulti<T extends string>({
             aria-pressed={selected}
             onClick={() => toggle(opt)}
             className={cn(
-              "rounded-full border px-4 py-2 text-sm transition-colors",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--terracotta-soft)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--paper)]",
+              baseClass,
               selected
-                ? "border-[color:var(--terracotta)] bg-[color:var(--terracotta)] text-[color:var(--paper-card)]"
-                : "border-[color:var(--line)] bg-transparent text-[color:var(--ink-soft)] hover:border-[color:var(--ink-muted)]"
+                ? "border-[color:var(--vermilion)] bg-[color:var(--vermilion)] text-[color:var(--cream)] stamp-shadow-cream"
+                : "border-[color:var(--cream-soft)] bg-transparent text-[color:var(--cream)] hover:border-[color:var(--vermilion)] hover:text-[color:var(--vermilion)]"
             )}
           >
+            {selected && <span aria-hidden className="mr-1.5">✓</span>}
             {opt}
           </button>
         );
