@@ -6,6 +6,60 @@ Tens of thousands of crores in Indian government welfare benefits go unclaimed e
 
 ---
 
+## Screenshots
+
+### Landing
+
+<p align="center">
+  <img src="docs/screenshots/hero.png" alt="Landing hero — rotating benefit words, 3D scheme card stack, stat tiles" width="720" />
+</p>
+
+<sub>Hero with rotating benefit words (pensions / housing / scholarships / cash transfers / health cover), an interactive 3D stack of scheme cards that tilts on cursor parallax, and three stat tiles (₹70K Cr+ unclaimed · 950+ schemes · &lt;8 sec to match).</sub>
+
+### Profile form
+
+<table>
+  <tr>
+    <td valign="top"><img src="docs/screenshots/form-01.png" alt="Form top — sections 01 and 02 empty" /></td>
+    <td valign="top"><img src="docs/screenshots/form-03.png" alt="Form mid-fill — Age 35, Male, Maharashtra, Farmer selected, 4/7 progress" /></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Empty — completion bar at 0/7, Step 01 (Age / Gender / State), Step 02 chip grids.</sub></td>
+    <td align="center"><sub>Filling in — floating labels float, "set" chip on Occupation, gradient progress bar at 4/7.</sub></td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="docs/screenshots/form-02.png" alt="Form bottom — Step 03 special statuses and gradient CTA" width="540" />
+</p>
+
+<sub>Bottom — Step 03 multi-select chips for special statuses (PwD, widow, BPL, owns farmland, senior 60+, minority, rural, etc.) and the gradient violet→pink→cyan submit button.</sub>
+
+### Loading
+
+<p align="center">
+  <img src="docs/screenshots/searching-results.png" alt="Loading theatre — status pill, stat tiles, rotating scheme fact card, step checklist" width="640" />
+</p>
+
+<sub>While DeepInfra works (~5–8 s), a theatre keeps the user engaged: live status pill, three counters (Scanned ticking to 950 · Eligible · Top match), 3D-stacked scheme fact card that rotates every 2.6 s with category-tinted glow, marquee ticker of all scheme names, and an 8-step checklist that advances as it goes.</sub>
+
+### Results
+
+<table>
+  <tr>
+    <td valign="top"><img src="docs/screenshots/results.png" alt="Results for BPL household member, landless laborer in Maharashtra" /></td>
+    <td valign="top"><img src="docs/screenshots/results2.png" alt="Results for a farmer in Maharashtra" /></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>BPL household, landless laborer, Maharashtra — DDU-GKY skill training (95) and MGNREGA employment guarantee (92).</sub></td>
+    <td align="center"><sub>Farmer, Maharashtra — PM-KISAN ₹6,000/year (95) and PMFBY crop insurance (92).</sub></td>
+  </tr>
+</table>
+
+<sub>Match score animates as a gradient SVG ring sized by score. Category pills carry per-category gradients (agri = emerald-lime, skill = violet-cyan, health = pink-orange, etc.). Sticky filter bar with All / Top match / per-category chips.</sub>
+
+---
+
 ## Stack
 
 - **Next.js 16** (App Router, RSC) with TypeScript
@@ -14,7 +68,8 @@ Tens of thousands of crores in Indian government welfare benefits go unclaimed e
 - **Upstash Redis + Ratelimit** — 5 requests / hour / IP on `/api/schemes`
 - **Zod v4** — strict server-side validation of the form payload
 - **lucide-react** icons, **sonner** toasts
-- Fonts: **Fraunces** (display, editorial serif) + **Geist** (body)
+- Fonts: **Geist Sans** (UI) + **Geist Mono** (labels, counters)
+- Pure CSS 3D for the hero card stack (cursor parallax via `requestAnimationFrame`) — no three.js, no other heavy deps
 
 The DeepInfra API key lives only in `process.env` on the server. Nothing in the client bundle references it.
 
@@ -57,18 +112,24 @@ src/
     robots.ts / sitemap.ts
     api/schemes/route.ts  # POST → ratelimit → Zod → DeepInfra → return
   components/
-    profile-form.tsx      # 3 sections, chip groups, native datalist for state
-    results-view.tsx      # filterable list of scheme cards
-    scheme-card.tsx       # one card per scheme
+    profile-form.tsx      # 3 sections, completion bar, chip groups
+    combobox.tsx          # searchable accessible dropdown (gender, state, education)
+    floating-input.tsx    # Material-style floating-label input (age)
     chip-group.tsx        # ChipGroup (single) + ChipMulti
-    section-header.tsx    # "01 / Title" editorial header
-    ornament.tsx          # nested-square SVG inspired by jaali lattice work
+    section-header.tsx    # "01 · Step 01 / Title" header
+    hero-visual.tsx       # 3D scheme card stack with cursor parallax
+    rotating-word.tsx     # animated word swap for hero
+    loading-theatre.tsx   # full loading state while API runs
+    results-view.tsx      # filterable list of scheme cards
+    scheme-card.tsx       # one card per scheme (gradient match ring)
+    ornament.tsx          # gradient logo mark
     header.tsx, footer.tsx
     ui/                   # shadcn outputs (button, input, dialog, …)
   lib/
     constants.ts          # states, occupations, incomes, statuses
     system-prompt.ts      # LLM system prompt (verbatim from spec)
     schema.ts             # Zod schema for the form payload + LLM response
+    scheme-facts.ts       # 20 real scheme facts shown during loading
     deepinfra.ts          # client + JSON-extraction helper
     ratelimit.ts          # Upstash sliding-window 5/hour/IP
     utils.ts              # shadcn cn()
@@ -147,20 +208,28 @@ Change `MODEL` in [src/lib/deepinfra.ts](src/lib/deepinfra.ts#L2). DeepInfra exp
 
 ## Design system
 
-Editorial-civic. Warm cream paper, ink black, terracotta accent — no tricolor clichés. Tokens live in [src/app/globals.css](src/app/globals.css):
+Modern dark SaaS — deep slate base with an animated aurora mesh, frosted-glass surfaces, and a violet → pink → cyan gradient as the brand thread. No tricolor clichés. Tokens live in [src/app/globals.css](src/app/globals.css):
 
 | Token | Value | Use |
 |-------|-------|-----|
-| `--paper` | `#f7f1e6` | Page background |
-| `--paper-card` | `#fffaf1` | Card background |
-| `--ink` | `#1a1611` | Headlines, body |
-| `--ink-soft` | `#4a4138` | Long-form copy |
-| `--ink-muted` | `#877867` | Meta, labels |
-| `--terracotta` | `#b8421f` | Primary CTA, match badge |
-| `--forest` | `#2d5e3e` | Reserved for success states |
-| `--line` | `#d9cdb8` | Dividers, borders |
+| `--background-base` | `#08080c` | Page background |
+| `--surface` | `rgba(255,255,255,0.035)` | Glass cards (default) |
+| `--surface-2` | `rgba(255,255,255,0.06)` | Glass cards (active/strong) |
+| `--text-primary` | `#fafafa` | Headlines, primary text |
+| `--text-secondary` | `#a1a1aa` | Body copy |
+| `--text-muted` | `#71717a` | Meta labels, hints |
+| `--violet` | `#a855f7` | Primary accent, CTA |
+| `--pink` | `#ec4899` | Secondary accent, destructive |
+| `--cyan` | `#06b6d4` | Tertiary accent |
+| `--emerald` | `#10b981` | Success (valid input, completed step) |
+| `--line` | `rgba(255,255,255,0.08)` | Dividers, borders |
 
-The only decorative element is a nested-square SVG inspired by *jaali* lattice work — see [src/components/ornament.tsx](src/components/ornament.tsx). No stock photos, no illustrations. Restraint is the look.
+Decorative elements:
+- **Aurora mesh** — two large radial-blob gradients drift over 22 s / 28 s in opposite directions, blurred to 120 px
+- **Gradient logo mark** — rounded violet→pink→cyan square with a 3-line monogram inside
+- **3D hero card stack** — six floating mini-cards at different Z-depths with cursor parallax, gentle continuous float + tilt
+- Match scores render as animated SVG rings (gradient stroke, `stroke-dasharray` keyed to score)
+- Subtle dotted grid overlay in hero, masked to a vignette so it fades into the bg
 
 ---
 
