@@ -176,7 +176,7 @@ export function Combobox({
       </button>
 
       {open && (
-        <div className="absolute z-50 left-0 right-0 mt-2 rounded-xl glass-strong shadow-[0_24px_60px_-20px_rgba(0,0,0,0.85)] overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150">
+        <div className="absolute z-[60] left-0 right-0 mt-2 rounded-xl border border-[color:var(--line)] bg-[#14141a] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.04)_inset] overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150">
           {searchable && (
             <div className="relative border-b border-[color:var(--line)]">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-muted)] pointer-events-none" />
